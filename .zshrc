@@ -96,12 +96,13 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 alias zshconfig="vi ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias vimconfig="vi ~/.vimrc"
 export PATH="/usr/local/bin:${PATH}"
 export PATH="$HOME/Library/Python/3.7/bin:${PATH}"
 export NVM_DIR="$HOME/.nvm" 
 . "/usr/local/opt/nvm/nvm.sh"
 export NODE_EXTRA_CA_CERTS="$HOME/Projects/AthenaHealth/athena-certs/athena-ca-certificates.pem"
-alias d='~/bin/bash/mosh.sh'
+alias dev='~/bin/bash/mosh.sh'
 alias mountdev='sshfs -p 22 dev104.athenahealth.com:/home/gsequeira ~/Projects/AthenaHealth/devhome/ -oauto_cache,reconnect,defer_permissions,noappledouble,negative_vncache,volname=devhome'
 alias unmountdev='umount ~/Projects/AthenaHealth/devhome'
 alias funmountdev='sudo diskutil umount force ~/Projects/AthenaHealth/devhome'
@@ -134,4 +135,8 @@ printf "\e]1337;SetBadgeFormat=%s\a" \
   $(echo -n "\(session.name) \(user.gitBranch)" | base64)
 
 # Powerline 
+powerline-daemon -q
 . /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+
+# FZF
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'

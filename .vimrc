@@ -90,3 +90,5 @@ set incsearch
 " show matching brackets
 autocmd FileType perl set showmatch
 
+" Fuzzy find in VIM
+set rtp+=/usr/local/opt/fzf
