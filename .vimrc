@@ -1,7 +1,7 @@
 set nocompatible
 filetype off
 let mapleader = " "
-let g:Perl_MapLeader = "`"
+let g:Perl_MapLeader = ","
 
 " Begin Vundle Configuration
 if !has("compatible")
@@ -13,7 +13,8 @@ if !has("compatible")
 
 	" NERDTree
 	Plugin 'scrooloose/nerdtree'
-	autocmd vimenter * NERDTree
+	autocmd StdinReadPre * let s:std_in=1
+	autocmd vimenter * NERDTree * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 	" CTRL-P fuzzy search
 	Plugin 'ctrlpvim/ctrlp.vim'
@@ -44,12 +45,18 @@ if !has("compatible")
 	" Close VIM if NERDTree is the only buffer open
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-	" Toggle NERDTree on/off using ",ne"
+	" Toggle NERDTree on/off using "<space>ne"
 	nmap <leader>ne :NERDTreeToggle<cr>
 
 	" Change CWD whenever the tree root is changed
 	let g:NERDTreeChDirMode = 2
 
+	" Close when a file is open
+	let NERDTreeQuitOnOpen = 1
+
+	" Enable mouse support
+	:set mouse=a
+	let g:NERDTreeMouseMode = 3
 	""" CTRL-P configuration
 	" begin finding a root from the CWD.
 	let g:crtrp_working_path_mode = 'rw'
@@ -80,6 +87,12 @@ vmap <s-tab> <gv
 " lookup docs
 nnoremap <buffer> <silent> _f :perldoc -f <cword><Enter>
 
+" make "pe" in normal mode execute 'p4 edit %'
+nmap pe :!p4 edit %<CR>
+
+" make "pr" in normal mode execute 'p4 revert %'
+nmap pr :!p4 revert %<CR>
+
 set dictionary+=/usr/share/dict/words
 
 " incremental search
@@ -90,5 +103,9 @@ set incsearch
 " show matching brackets
 autocmd FileType perl set showmatch
 
-" Fuzzy find in VIM
-set rtp+=/usr/local/opt/fzf
+" FZF
+set rtp+=~/.linuxbrew/bin/fzf
+
+" Reduce annoying ESC delay
+set timeoutlen=1000 ttimeoutlen=10
+
