@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -8,7 +15,8 @@ export ZSH="/Users/gsequeira/.oh-my-zsh"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
-ZSH_THEME="agnoster"
+# ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -63,7 +71,7 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git
+git
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -100,7 +108,7 @@ alias vimconfig="vi ~/.vimrc"
 export PATH="/usr/local/bin:${PATH}"
 export PATH="$HOME/Library/Python/3.7/bin:${PATH}"
 export NVM_DIR="$HOME/.nvm" 
-. "/usr/local/opt/nvm/nvm.sh"
+alias loadnvm=". $(brew --prefix nvm)/nvm.sh"
 export NODE_EXTRA_CA_CERTS="$HOME/Projects/AthenaHealth/athena-certs/athena-ca-certificates.pem"
 alias dev='~/bin/bash/mosh.sh'
 alias mountdev='sshfs -p 22 dev104.athenahealth.com:/home/gsequeira ~/Projects/AthenaHealth/devhome/ -oauto_cache,reconnect,defer_permissions,noappledouble,negative_vncache,volname=devhome'
@@ -127,12 +135,15 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# Groovy Env
+export GROOVY_HOME=/usr/local/opt/groovy/libexec
+
 iterm2_print_user_vars() {
-  iterm2_set_user_var gitBranch $((git branch 2> /dev/null) | grep \* | cut -c3-)
+	iterm2_set_user_var gitBranch $((git branch 2> /dev/null) | grep \* | cut -c3-)
 }
 # Set badge to show the current session name and git branch, if any is set.
-printf "\e]1337;SetBadgeFormat=%s\a" \
-  $(echo -n "\(session.name) \(user.gitBranch)" | base64)
+# printf "\e]1337;SetBadgeFormat=%s\a" \
+# 	$(echo -n "\(session.name) \(user.gitBranch)" | base64)
 
 # Powerline 
 powerline-daemon -q
@@ -140,3 +151,18 @@ powerline-daemon -q
 
 # FZF
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+alias g='grep --line-buffered --color=never -r "" * | fzf'
+fif() {
+  [ ! "$#" -ge 1 ] && { echo "Need a string to search for!"; return 1; }
+  rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+}
+
+# FASD
+eval "$(fasd --init auto)"
+alias v='f -t -e vim -b viminfo'
+
+loadnvm
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
