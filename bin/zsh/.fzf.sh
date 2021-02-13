@@ -9,7 +9,7 @@ fd() {
 
 # fif - find-in-file using ripgrep
 fif() {
-	[ ! "$#" -ge 1 ] && { echo "Usage: fif <string>"; exit 1; }
+	[ ! "$#" -ge 1 ] && { echo "Usage: fif <string>"; return; }
 	rg --files-with-matches --no-messages "$1" | \
 		fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
 }
